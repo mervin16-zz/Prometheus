@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  fortweet:
+    container_name: fortweet
+    image: docker.pkg.github.com/mervin16/fortweet/fortweet:0.2.2
+    env_file:
+      - secret.env
+    networks:
+      plutusnet:
+        ipv4_address: 172.16.0.10
+    ports:
+      - 8083:8083
+    restart: always
+
+networks:
+  plutusnet:
+    name: plutus_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1

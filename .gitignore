@@ -1,0 +1,8 @@
+# Environment files
+*.env
+
+# Text Files
+*.txt
+
+# Postgres Volume
+plutus/postgres-data
