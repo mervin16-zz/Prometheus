@@ -3,12 +3,13 @@ version: "3.8"
 services:
   th3pl4gu3:
     container_name: th3pl4gu3
-    image: docker.pkg.github.com/mervin16/th3pl4gu3/th3pl4gu3:0.1
+    image: "docker.pkg.github.com/mervin16/th3pl4gu3/th3pl4gu3:${TH3PL4GU3_VERSION}"
     networks:
       - th3pl4gu3_net
     ports:
       - 8082:8082
     restart: always
+      - TH3PL4GU3_VERSION=${TH3PL4GU3_VERSION}
 
 networks:
   th3pl4gu3_net:
