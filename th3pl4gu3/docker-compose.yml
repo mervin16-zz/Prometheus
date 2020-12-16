@@ -9,6 +9,9 @@ services:
     ports:
       - 8082:8082
     restart: always
+    env_file:
+      - secret.env
+    environment:
       - TH3PL4GU3_VERSION=${TH3PL4GU3_VERSION}
 
 networks:
