@@ -6,3 +6,8 @@
 
 # Postgres Volume
 plutus/postgres-data
+
+# Logs
+logs/
+log/
+.log
