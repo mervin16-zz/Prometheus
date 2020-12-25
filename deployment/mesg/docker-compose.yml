@@ -12,6 +12,7 @@ services:
     environment:
       - MESG_VERSION=${MESG_VERSION}
 
+
 networks:
   mes_net:
     name: mes_network
