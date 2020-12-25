@@ -1,16 +1,6 @@
 version: "3.8"
 
 services:
-  mes:
-    container_name: mes_py
-    image: "docker.pkg.github.com/mervin16/mauritius-emergency-services-api/mes:${MES_VERSION}"
-    networks:
-      - mes_net
-    ports:
-      - 8081:8081
-    restart: always
-    environment:
-      - MES_VERSION=${MES_VERSION}
   mesg:
     container_name: mes_go
     image: "docker.pkg.github.com/mervin16/mauritius-emergency-services-api-go/mesg:${MESG_VERSION}"
