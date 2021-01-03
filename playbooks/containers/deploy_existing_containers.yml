@@ -1,0 +1,61 @@
+---
+- name: Pre-Configurations
+  hosts: prometheus_dev
+  vars_files:
+    - /etc/ansible/vaults/prometheus-vault.yml
+  tasks:
+    - include_vars: vars_prometheus.yml
+
+    - name: Copy Versions File
+      copy:
+        src: versions.env
+        dest: /home/th3pl4gu3/Prometheus/versions.env
+
+    - name: Copy Portfolix Secret File
+      copy:
+        src: secret_portfolix.env
+        dest: /home/th3pl4gu3/Prometheus/deployment/portfolix/secret.env
+
+    - name: Copy Th3pl4gu3 Secret File
+      copy:
+        src: secret_th3pl4gu3.env
+        dest: /home/th3pl4gu3/Prometheus/deployment/th3pl4gu3/secret.env
+
+    - name: Github Docker Login
+      shell: |
+        docker login https://docker.pkg.github.com -u {{ username_github }} -p {{ token_github }}
+
+- name: Start Docker Containers
+  hosts: prometheus_dev
+  vars_files:
+    - /etc/ansible/vaults/prometheus-vault.yml
+  tasks:
+    - include_vars: vars_prometheus.yml
+
+    - name: Start Portfolix Container
+      shell: |
+        cd /home/th3pl4gu3/Prometheus/deployment/portfolix
+        docker-compose up --build -d
+      environment:
+        - PORTFOLIX_VERSION: "{{ PORTFOLIX_VERSION }}"
+
+    - name: Start Th3pl4gu3 Container
+      shell: |
+        cd /home/th3pl4gu3/Prometheus/deployment/th3pl4gu3
+        docker-compose up --build -d
+      environment:
+        - TH3PL4GU3_VERSION: "{{ TH3PL4GU3_VERSION }}"
+
+    - name: Start MESG Container
+      shell: |
+        cd /home/th3pl4gu3/Prometheus/deployment/mesg
+        docker-compose up --build -d
+      environment:
+        - MESG_VERSION: "{{ MESG_VERSION }}"
+
+    - name: Start MES Container
+      shell: |
+        cd /home/th3pl4gu3/Prometheus/deployment/mes
+        docker-compose up --build -d
+      environment:
+        - MES_VERSION: "{{ MES_VERSION }}"
