@@ -55,3 +55,5 @@ logs/
 log/
 .log
 
+# Variable files
+vars_*.yml
