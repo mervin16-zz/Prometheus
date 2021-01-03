@@ -1,16 +1,12 @@
-# Prometheus-Deployment
+# Prometheus
 
-Prometheus is my virtual private server hosted on [Digital Ocean](https://www.digitalocean.com/). 
+Prometheus is my virtual private server hosted on [Digital Ocean](https://www.digitalocean.com/).
 
-This repo contains all the docker compose strategies used for the apps deployed on the server.
+This repo contains all the deployment, provisioning and automation strategies used for management of Prometheus
 
-# Virtual Private Server
-
-The VPS is a Linux server of distro Ubuntu.
-
-# Deployments
-
-All applications are deployed using docker containers and hosted on Nginx by reverse proxies.
+```
+A detailed wiki is available [here](https://github.com/mervin16/Prometheus/wiki)
+```
 
 # License
 
