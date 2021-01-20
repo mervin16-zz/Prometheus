@@ -1,0 +1,36 @@
+---
+- name: Pre-Configurations
+  hosts: prometheus_dev
+  vars_files:
+    - /etc/ansible/vaults/prometheus-vault.yml
+  tasks:
+    - include_vars: vars_prometheus.yml
+
+    # Some variables to define to identify the repository
+    - set_fact:
+        application_name: "application"
+        container_version: 1.1
+
+    - name: Setup Folder and Versions File
+      shell: |
+        echo "export {{ application_name|upper }}_VERSION={{ container_version }}" >> /home/th3pl4gu3/Prometheus/versions.env
+        mkdir -p /home/th3pl4gu3/Prometheus/deployment/{{ application_name }}
+
+    - name: Copy Docker Compose File
+      copy:
+        src: docker-compose.yml
+        dest: /home/th3pl4gu3/Prometheus/deployment/{{ application_name }}/docker-compose.yml
+
+    # This is optional
+    # If you have other files that needs to be copied to remote,
+    # Modify accordingly.
+    # - name: Copy Secret Environment File (Optional)
+    #   copy:
+    #     src: secret.env
+    #     dest: /home/th3pl4gu3/Prometheus/deployment/{{ application_name }}/secret.env
+
+    - name: Start Application Container
+      shell: |
+        source /home/th3pl4gu3/Prometheus/versions.env
+        cd /home/th3pl4gu3/Prometheus/deployment/{{ application_name }}
+        docker-compose up --build -d

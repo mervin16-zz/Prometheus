@@ -1,0 +1,42 @@
+---
+- name: Update Th3pl4gu3
+  #hosts: prometheus_dev
+  hosts: localhost
+  vars_files:
+    # The main Prometheus vault file
+    - /etc/ansible/vaults/prometheus-vault.yml
+  tasks:
+    # The main Prometheus vars file
+    - include_vars: ../vars_prometheus.yml
+
+    # Some variables to define to identify the repository
+    # You'll need a Bearer token
+    - set_fact:
+        bearer_token: "{{ token_github }}"
+        repository_name: Th3pl4gu3
+        repository_owner: "{{ username_github }}"
+
+    - name: Retrieve packages for repository
+      uri:
+        url: https://api.github.com/graphql
+        method: POST
+        body: '{"query":
+          "query { repository(name: \"{{ repository_name }}\", owner: \"{{ repository_owner }}\") {
+          packages(first:10) { nodes { name, packageType, latestVersion {
+          version, files(first:100) { nodes { url } }
+          } } }
+          }
+          }"'
+        headers:
+          Content-Type: application/json
+          Accept: "application/vnd.github.packages-preview+json"
+          Authorization: "bearer {{ bearer_token }}"
+      register: github_packages_json
+
+    - name: Loop through Packages & Reload Docker Container
+      with_items: "{{github_packages_json.json.data.repository.packages.nodes}}"
+      when:
+        - item.packageType == 'DOCKER'
+        - item.latestVersion != None
+      debug:
+        msg: "The version is {{ item.latestVersion.version }}"
